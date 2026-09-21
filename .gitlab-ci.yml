@@ -1,0 +1,40 @@
+stages:
+  - quality
+  - test
+  - build-container
+
+variables:
+  APPTAINER_IMAGE: "accelerator-pipeline.sif"
+
+# 1. Verification de la qualite et du typage
+lint-and-syntax:
+  stage: quality
+  image: python:3.12-slim
+  script:
+    - pip install ruff
+    - ruff check mcp_epics_server.py drift_monitoring.py
+    - python -m json.tool metadata_fair.jsonld > /dev/null
+
+# 2. Execution des tests unitaires et de surete logicielle
+unit-tests:
+  stage: test
+  image: python:3.12-slim
+  script:
+    - pip install -r requirements.txt || pip install "mcp<2" scipy numpy pandas
+    - python test_mcp_client.py
+    - python drift_monitoring.py
+
+# 3. Packaging conteneur Apptainer pour execution sur cluster Slurm (CCIN2P3)
+build-apptainer:
+  stage: build-container
+  image: quay.io/singularity/singularity:v3.11.4
+  rules:
+    - if: $CI_COMMIT_TAG
+    - if: $CI_COMMIT_BRANCH == "main"
+      when: manual
+  script:
+    - singularity build ${APPTAINER_IMAGE} Apptainer.def
+  artifacts:
+    paths:
+      - ${APPTAINER_IMAGE}
+    expire_in: 7 days

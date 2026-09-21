@@ -1,0 +1,42 @@
+{
+  "@context": {
+    "@vocab": "https://schema.org/",
+    "qudt": "http://qudt.org/schema/qudt/",
+    "unit": "http://qudt.org/vocab/unit/",
+    "spiral2": "https://data.ganil.fr/ontology/accelerator#"
+  },
+  "@type": "Dataset",
+  "@id": "urn:ganil:spiral2:run2026-beam-data",
+  "name": "SPIRAL2 High-Intensity Beam Current Diagnostics",
+  "description": "Données d'exploitation et de correction du faisceau de l'accélérateur SPIRAL2 pour l'entraînement de modèles prédictifs TwinRISE.",
+  "license": "https://creativecommons.org/licenses/by/4.0/",
+  "keywords": ["Particle Accelerator", "Heavy Ions", "EPICS", "Beam Diagnostics", "FAIR Data"],
+  "publisher": {
+    "@type": "Organization",
+    "name": "GANIL - Grand Accélérateur National d'Ions Lourds",
+    "url": "https://www.ganil-spiral2.eu"
+  },
+  "distribution": [
+    {
+      "@type": "DataDownload",
+      "encodingFormat": "application/vnd.apache.parquet",
+      "contentUrl": "file://./mesures_faisceau.parquet"
+    }
+  ],
+  "variableMeasured": [
+    {
+      "@type": "PropertyValue",
+      "name": "beam_current",
+      "description": "Courant de faisceau mesuré par transformateur de courant AC/DC (ACCT)",
+      "unitCode": "unit:MilliA"
+    },
+    {
+      "@type": "PropertyValue",
+      "name": "corrector_current",
+      "description": "Courant d'alimentation appliqué sur l'aimant de correction de trajectoire",
+      "unitCode": "unit:A",
+      "minValue": 30.0,
+      "maxValue": 60.0
+    }
+  ]
+}
